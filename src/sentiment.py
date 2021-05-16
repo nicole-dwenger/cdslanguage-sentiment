@@ -145,7 +145,6 @@ def get_textblob_sentiments(df, text_column):
         
     return sentiment_scores
 
-
 def get_vader_sentiments(df, text_column):
     """
     Get sentiments for each row in text_column of dataframe using VADER
@@ -174,8 +173,7 @@ def get_vader_sentiments(df, text_column):
         sentiment_scores.append(compound)
         
     return sentiment_scores
-    
-    
+        
 def rolling_sentiment_plot(time_window, time_label, df, out_directory, library):
     """
     Plotting the rolling sentiment scores for a given time window, 
