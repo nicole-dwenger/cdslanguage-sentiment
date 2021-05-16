@@ -1,6 +1,6 @@
 # Dictionary-based Sentiment Analysis
 
-> [Description](#description) | [Methods](#methods) | [Repository Structure](#repository-structure) | [Usage](#usage) | [Results and Disucssion](#results-and-discussion) |
+[Description](#description) | [Methods](#methods) | [Repository Structure](#repository-structure) | [Usage](#usage) | [Results and Disucssion](#results-and-discussion) |
 
 ## Description
 > This project relates to Assignment 3: Sentiment Analysis of the course Language Analytics.
