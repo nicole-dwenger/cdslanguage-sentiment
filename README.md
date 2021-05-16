@@ -1,6 +1,6 @@
 # Dictionary-based Sentiment Analysis
 
-[Description](#description) | [Methods](#methods) | [Repository Structure](#repository-structure) | [Usage](#usage) | [Results and Disucssion](#results-and-discussion) |
+[Description](#description) | [Methods](#methods) | [Repository Structure](#repository-structure) | [Usage](#usage) | [Results and Disucssion](#results-and-discussion)
 
 ## Description
 > This project relates to Assignment 3: Sentiment Analysis of the course Language Analytics.
@@ -90,7 +90,7 @@ __Parameters:__
 - `-s, --start_date`: *str, optional, default:* `2003-02-19`\
   Start date to subset headlines. Earliest is `2003-02-19`.
   
-- `-e, --end_date`: *str, optional, default:* `2020-12-31`\ 
+- `-e, --end_date`: *str, optional, default:* `2020-12-31`\
   End date to subset headlines. Latest is `2020-12-31`.
 
 
