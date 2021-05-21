@@ -23,7 +23,7 @@ Output saved in out/:
   - {library}_1-month_sentiment.png: plot with 1 month rolling average from start-end date
 """
 
-# LIBRARIES ---------------------------------------------------
+# LIBRARIES ----------------------------------------------------------
 
 # Basics
 import os
@@ -40,81 +40,8 @@ from spacytextblob.spacytextblob import SpacyTextBlob
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-
-# MAIN FUNCTION -----------------------------------------------
- 
-def main():
     
-    # --- ARGUMENT PARSER AND OUTPUT DIRECTORY ---
-    
-    # Initialise argument parser
-    ap = argparse.ArgumentParser()
-    
-    # Add input options for file path for input data and 
-    ap.add_argument("-d", "--data_path", help = "Path to input file",
-                    required = False, default = "../data/abcnews-date-text.csv")
-    
-    ap.add_argument("-l", "--library", help = "Library: 'textblob' or 'vader'",
-                    required = False, default = "textblob")
-    
-    ap.add_argument("-s", "--start_date", help = "Start date in yyyy-mm-dd",
-                    required = False, default = "2003-02-19")
-    
-    ap.add_argument("-e", "--end_date", help = "End date in yyyy-mm-dd",
-                    required = False, default = "2020-12-31")
-    
-    # Retrieve iput arguments
-    args = vars(ap.parse_args())
-    data_path = args["data_path"]
-    library = args["library"]
-    start_date = args["start_date"]
-    end_date = args["end_date"]
-    
-    # Prepare output directory
-    out_directory = os.path.join("..", "out")
-    if not os.path.exists(out_directory):
-        os.mkdir(out_directory)
-    
-    # --- SENTIMENT ANALYSIS ---
-    
-    # Print message
-    print(f"\nInitialising sentiment analysis for {data_path} from {start_date} to {end_date} using {library}")
-    
-    # Load data to pandas df, with publish date as index, and parsed as date time
-    df = pd.read_csv(data_path, index_col=["publish_date"], parse_dates=["publish_date"])
-    # Filter out dates by start and end date
-    df = df.loc[start_date:end_date]        
-  
-    # Get sentiment scores as list based on input
-    if library == "textblob":
-        sentiment_scores = get_textblob_sentiments(df, "headline_text")
-    elif library == "vader":
-        sentiment_scores = get_vader_sentiments(df, "headline_text")
-        
-    # Append the sentiment_scores to the dataframe as sentiment
-    df = df.assign(sentiment = sentiment_scores)
-    
-    # Save dataframe with sentiment scores in output directory
-    out_df = os.path.join(out_directory, f"{library}_sentiment_scores.csv")
-    df.to_csv(out_df, index = True)
-
-    # --- PLOTTING ---
-    
-    # Print message
-    print(f"Sentiment scores are calculated, now generating plots.")
-    
-    # Calculate average sentiment score for each day
-    df_daily_sentiment = df.resample("1d").mean()
-    
-    # Generate and save plots in output directory
-    rolling_sentiment_plot("7d", "1-week", df_daily_sentiment, out_directory, library)
-    rolling_sentiment_plot("30d", "1-month", df_daily_sentiment, out_directory, library)
-    
-    # Print message
-    print(f"Done! CSV file and plots are in {out_directory}.\n ")
-
-    
-# HELPER FUNCTIONS --------------------------------------------
+# HELPER FUNCTIONS ---------------------------------------------------
 
 def get_textblob_sentiments(df, text_column):
     """
@@ -203,6 +130,79 @@ def rolling_sentiment_plot(time_window, time_label, df, out_directory, library):
     
     # Save figure as png in output
     plt.savefig(os.path.join(out_directory, f"{library}_{time_label}_sentiment.png"), bbox_inches='tight')
+
+
+# MAIN FUNCTION ------------------------------------------------------
+ 
+def main():
+    
+    # --- ARGUMENT PARSER AND OUTPUT DIRECTORY ---
+    
+    # Initialise argument parser
+    ap = argparse.ArgumentParser()
+    
+    # Add input options for file path for input data and 
+    ap.add_argument("-d", "--data_path", help = "Path to input file",
+                    required = False, default = "../data/abcnews-date-text.csv")
+    
+    ap.add_argument("-l", "--library", help = "Library: 'textblob' or 'vader'",
+                    required = False, default = "textblob")
+    
+    ap.add_argument("-s", "--start_date", help = "Start date in yyyy-mm-dd",
+                    required = False, default = "2003-02-19")
+    
+    ap.add_argument("-e", "--end_date", help = "End date in yyyy-mm-dd",
+                    required = False, default = "2020-12-31")
+    
+    # Retrieve iput arguments
+    args = vars(ap.parse_args())
+    data_path = args["data_path"]
+    library = args["library"]
+    start_date = args["start_date"]
+    end_date = args["end_date"]
+    
+    # Prepare output directory
+    out_directory = os.path.join("..", "out")
+    if not os.path.exists(out_directory):
+        os.mkdir(out_directory)
+    
+    # --- SENTIMENT ANALYSIS ---
+    
+    # Print message
+    print(f"\nInitialising sentiment analysis for {data_path} from {start_date} to {end_date} using {library}")
+    
+    # Load data to pandas df, with publish date as index, and parsed as date time
+    df = pd.read_csv(data_path, index_col=["publish_date"], parse_dates=["publish_date"])
+    # Filter out dates by start and end date
+    df = df.loc[start_date:end_date]        
+  
+    # Get sentiment scores as list based on input
+    if library == "textblob":
+        sentiment_scores = get_textblob_sentiments(df, "headline_text")
+    elif library == "vader":
+        sentiment_scores = get_vader_sentiments(df, "headline_text")
+        
+    # Append the sentiment_scores to the dataframe as sentiment
+    df = df.assign(sentiment = sentiment_scores)
+    
+    # Save dataframe with sentiment scores in output directory
+    out_df = os.path.join(out_directory, f"{library}_sentiment_scores.csv")
+    df.to_csv(out_df, index = True)
+
+    # --- PLOTTING ---
+    
+    # Print message
+    print(f"Sentiment scores are calculated, now generating plots.")
+    
+    # Calculate average sentiment score for each day
+    df_daily_sentiment = df.resample("1d").mean()
+    
+    # Generate and save plots in output directory
+    rolling_sentiment_plot("7d", "1-week", df_daily_sentiment, out_directory, library)
+    rolling_sentiment_plot("30d", "1-month", df_daily_sentiment, out_directory, library)
+    
+    # Print message
+    print(f"Done! CSV file and plots are in {out_directory}.\n ")
     
     
 if __name__=="__main__":
