@@ -91,7 +91,7 @@ __Parameters:__
   End date to subset headlines. Latest is `2020-12-31`.
 
 
-__Output__ saved in `out`: 
+__Output__ saved in `out/`: 
 
 - `{dictionary}_sentiment.csv`\
   CSV file with columns of publish date, headline and sentiment 
