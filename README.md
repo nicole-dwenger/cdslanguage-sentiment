@@ -5,7 +5,7 @@
 ## Description
 > This project relates to Assignment 3: Sentiment Analysis of the course Language Analytics.
 
-Sentiment analysis aims to investigate the sentiment, meaning emotionality or polarity and its temporal development in text. One way sentiment can be analysed is through dictionary based approaches. This means that single words are assigned sentiment values which are defined in a dictionary. Two of these dictionaries are spaCyTextBlob and VADER. This project provides a script to conduct dictionary-based sentiment analysis on a dataset of over a million headlines of the Australian news source ABC from 2003-2020. The script can extract sentiment scores using either spaCyTextBlob and VADER. Further, it visualises the temporal development of sentiment scores over time using 1-week and 1-month rolling averages. Running the script with both dictionaries also allowed comparing the two methods and their results. 
+Sentiment analysis aims to investigate the sentiment, meaning emotionality or polarity and its temporal development in text. This project provides a script to conduct dictionary-based sentiment analysis on a dataset of over a million headlines of the Australian news source ABC from 2003-2020. The script can extract sentiment scores either using the dictionary spaCyTextBlob and VADER. Further, it visualises the temporal development of sentiment scores over time using 1-week and 1-month rolling averages. Running the script with both dictionaries also allowed comparing the two methods and their results. 
 
 
 ## Methods
@@ -14,7 +14,7 @@ Sentiment analysis aims to investigate the sentiment, meaning emotionality or po
 For this project a collection of over a million headlines of the Australia news source ABC (Start Date: 2003-02-19; End Date: 2020-12-31) was used. The data is available on [Kaggle](https://www.kaggle.com/therohk/million-headlines).
 
 ### Dictionary-Based Sentiment Anaylsis: spaCyTextBlob and VADER
-spaCyTextBlob returns for any given sentence a score of polarity (positive, negative) and subjectivity (emotionality). In this project, the score of polarity is used, which ranges between -1 (negative) and 1 (positive). VADER returns the probability of a sentence being positive, negative or neural, and a compound score, which is an aggregated score of all values. For this project, the compound score is used, as it also ranged between -1 (negative) and 1 (positive). For each headline in the data, either the polarity score using spaCyTextBlob or the compound score using VADER is extracted. Subsequently, a daily average is computed, as the data contained multiple headlines per day. These daily averages were then used to calculate rolling averages over one week and one month.
+Dictionary based sentiment analyses rely on dictionaries, in which single words are assigned sentiment scores. Two of these dictionaries are spaCyTextBlob and VADER. SpaCyTextBlob returns for any given sentence a score of *polarity* (positive, negative) and *subjectivity* (emotionality). For this project, the score of *polarity* was used, which ranges between -1 (negative) and 1 (positive). VADER returns the probability of a sentence being positive, negative or neutral, and a *compound score*, an aggregated score of all values. Here, the *compound score* was used, as it also ranged between -1 (negative) and 1 (positive). For each headline in the data, either the polarity score using spaCyTextBlob or the compound score using VADER was extracted. Subsequently, a daily average was computed, as the data contained multiple headlines per day. These daily averages were then used to calculate rolling averages over one week and one month, which were plotted over time (2003-2020).
 
 
 ## Repository Structure
@@ -42,7 +42,7 @@ spaCyTextBlob returns for any given sentence a score of polarity (positive, nega
 **!** The scripts have only been tested on Linux, using Python 3.6.9. 
 
 ### 1. Cloning the Repository and Installing Dependencies
-To run the script in this repository, I recommend cloning this repository and installing necessary dependencies in a virtual environment. The bash script `create_venv.sh` can be used to create a virtual environment called `venv_sentiment` with all necessary dependencies, listed in the `requirements.txt` file. The following commands can be used:
+To run the script in this repository, I recommend cloning this repository and installing necessary dependencies in a virtual environment. The bash script `create_venv.sh` can be used to create a virtual environment called `venv_sentiment` with all necessary dependencies, listed in the `requirements.txt` file. This will also load the necessary language model from spaCy (`en_core_web_sm`). The following commands can be used:
 
 ```bash
 # cloning the repository
@@ -62,7 +62,7 @@ source venv_sentiment/bin/activate
 The data, which was downloaded from [kaggle](https://www.kaggle.com/therohk/million-headlines) and described above, is already stored in the `data/` directory, meaning that when cloning the repository it is not necessary to retrieve any data to run the script.
 
 ### 3. Running the Script 
-The script `sentiment.py` extracts sentiment scores for each headline in the date, generates daily means and plot 1-week and 1-month rolling averages over time. The script should be called from the `src/` directory: 
+The script `sentiment.py` extracts sentiment scores for each headline in the data using either spaCyTextBlob or VADER, generates daily means and plots 1-week and 1-month rolling averages over time. The script should be called from the `src/` directory: 
 
 ```bash
 # move into src 
