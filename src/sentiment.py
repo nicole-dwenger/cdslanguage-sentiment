@@ -40,6 +40,7 @@ from spacytextblob.spacytextblob import SpacyTextBlob
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
+
 # HELPER FUNCTIONS ---------------------------------------------------
 
 def get_textblob_sentiments(df, text_column):
@@ -191,8 +192,8 @@ def main():
     df = df.assign(sentiment=sentiment_scores)
     
     # Save dataframe with sentiment scores in output directory
-    out_df = os.path.join(out_directory, f"{dictionary}_sentiment_scores.csv")
-    df.to_csv(out_df, index = True)
+    out_path = os.path.join(out_directory, f"{dictionary}_sentiment_scores.csv")
+    df.to_csv(out_path, index=True)
 
     # --- PLOTTING ---
     
