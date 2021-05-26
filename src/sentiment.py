@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Script to calculate sentiment scores of news headlines using TextBlob or VADER, and
+Script to calculate sentiment scores of news headlines using TextBlob or VADER,
 save sentiment scores in csv file and generate plots of rolling averages 
 
 Steps:
@@ -12,15 +12,15 @@ Steps:
   - Visualise rolling means in plots
   
 Input:
-  - -d, --data_path, str, optional, default: ../data/abcnews-date-text.csv, path to datafile
-  - -l, --library, str, optional, default: textblob, should be either "textblob" or "vader"
+  - -i, --input_file, str, optional, default: ../data/abcnews-date-text.csv, path to input datafile
+  - -d, --dictionary, str, optional, default: textblob, should be either "textblob" or "vader"
   - -s, --start_date, str, optional, default: 2003-02-19, start date to get sentiment scores for in yyyy-mm-dd
   - -e, --end_date, str, optional, default: 2020-12-3, end date to get sentiment scores for in yyyy-mm-dd
 
 Output saved in out/:
-  - {library}_sentiment.csv: csv file with publish_date, headline, sentiment score
-  - {library}_1-week_sentiment.png: plot with 1 week rolling average from start-end date
-  - {library}_1-month_sentiment.png: plot with 1 month rolling average from start-end date
+  - {dictionary}_sentiment.csv: csv file with publish_date, headline, sentiment score
+  - {dictionary}_1-week_sentiment.png: plot with 1 week rolling average from start-end date
+  - {dictionary}_1-month_sentiment.png: plot with 1 month rolling average from start-end date
 """
 
 # LIBRARIES ----------------------------------------------------------
@@ -34,7 +34,7 @@ from tqdm import tqdm
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Spacy and nltk
+# TextBlob and VADER
 import spacy 
 from spacytextblob.spacytextblob import SpacyTextBlob
 import nltk
@@ -101,7 +101,7 @@ def get_vader_sentiments(df, text_column):
         
     return sentiment_scores
         
-def rolling_sentiment_plot(time_window, time_label, df, out_directory, library):
+def rolling_sentiment_plot(time_window, time_label, df, out_directory, dictionary):
     """
     Plotting the rolling sentiment scores for a given time window, 
     and saving plot in output directory
@@ -122,14 +122,14 @@ def rolling_sentiment_plot(time_window, time_label, df, out_directory, library):
     # Plot the smoothed data values
     plt.plot(rolling_df["sentiment"], label = f"{time_label} rolling average")
     # Add title, x label and y label and legend to the plot
-    plt.title(f"Sentiment [{library}] over time with a {time_label} rolling average")
+    plt.title(f"Sentiment [{dictionary}] over time with a {time_label} rolling average")
     plt.xlabel("Date")
     plt.xticks(rotation=45)
     plt.ylabel(f"Sentiment score")
     plt.legend(loc="upper right")
     
     # Save figure as png in output
-    plt.savefig(os.path.join(out_directory, f"{library}_{time_label}_sentiment.png"), bbox_inches='tight')
+    plt.savefig(os.path.join(out_directory, f"{dictionary}_{time_label}_sentiment.png"), bbox_inches='tight')
 
 
 # MAIN FUNCTION ------------------------------------------------------
@@ -142,10 +142,10 @@ def main():
     ap = argparse.ArgumentParser()
     
     # Add input options for file path for input data and 
-    ap.add_argument("-d", "--data_path", help = "Path to input file",
+    ap.add_argument("-i", "--input_file", help = "Path to input file",
                     required = False, default = "../data/abcnews-date-text.csv")
     
-    ap.add_argument("-l", "--library", help = "Library: 'textblob' or 'vader'",
+    ap.add_argument("-d", "--dictionary", help = "Dictionary: 'textblob' or 'vader'",
                     required = False, default = "textblob")
     
     ap.add_argument("-s", "--start_date", help = "Start date in yyyy-mm-dd",
@@ -156,37 +156,37 @@ def main():
     
     # Retrieve iput arguments
     args = vars(ap.parse_args())
-    data_path = args["data_path"]
-    library = args["library"]
+    input_file = args["input_file"]
+    dictionary = args["dictionary"]
     start_date = args["start_date"]
     end_date = args["end_date"]
     
     # Prepare output directory
-    out_directory = os.path.join("..", "out")
+    out_directory = os.path.join("..", "out2")
     if not os.path.exists(out_directory):
         os.mkdir(out_directory)
     
     # --- SENTIMENT ANALYSIS ---
     
     # Print message
-    print(f"\nInitialising sentiment analysis for {data_path} from {start_date} to {end_date} using {library}")
+    print(f"\nInitialising sentiment analysis for {input_file} from {start_date} to {end_date} using {dictionary}.")
     
     # Load data to pandas df, with publish date as index, and parsed as date time
-    df = pd.read_csv(data_path, index_col=["publish_date"], parse_dates=["publish_date"])
+    df = pd.read_csv(input_file, index_col=["publish_date"], parse_dates=["publish_date"])
     # Filter out dates by start and end date
     df = df.loc[start_date:end_date]        
   
     # Get sentiment scores as list based on input
-    if library == "textblob":
+    if dictionary == "textblob":
         sentiment_scores = get_textblob_sentiments(df, "headline_text")
-    elif library == "vader":
+    elif dictionary == "vader":
         sentiment_scores = get_vader_sentiments(df, "headline_text")
         
     # Append the sentiment_scores to the dataframe as sentiment
-    df = df.assign(sentiment = sentiment_scores)
+    df = df.assign(sentiment=sentiment_scores)
     
     # Save dataframe with sentiment scores in output directory
-    out_df = os.path.join(out_directory, f"{library}_sentiment_scores.csv")
+    out_df = os.path.join(out_directory, f"{dictionary}_sentiment_scores.csv")
     df.to_csv(out_df, index = True)
 
     # --- PLOTTING ---
@@ -198,8 +198,8 @@ def main():
     df_daily_sentiment = df.resample("1d").mean()
     
     # Generate and save plots in output directory
-    rolling_sentiment_plot("7d", "1-week", df_daily_sentiment, out_directory, library)
-    rolling_sentiment_plot("30d", "1-month", df_daily_sentiment, out_directory, library)
+    rolling_sentiment_plot("7d", "1-week", df_daily_sentiment, out_directory, dictionary)
+    rolling_sentiment_plot("30d", "1-month", df_daily_sentiment, out_directory, dictionary)
     
     # Print message
     print(f"Done! CSV file and plots are in {out_directory}.\n ")
