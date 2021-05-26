@@ -1,4 +1,4 @@
-# Dictionary-based Sentiment Analysis
+# Dictionary-Based Sentiment Analysis
 
 [Description](#description) | [Methods](#methods) | [Repository Structure](#repository-structure) | [Usage](#usage) | [Results and Disucssion](#results-and-discussion) | [Contact](#contact)
 
@@ -13,30 +13,29 @@ Sentiment analysis aims to investigate the sentiment, meaning emotionality or po
 ### Data
 For this project a collection of over a million headlines of the Australia news source ABC (Start Date: 2003-02-19; End Date: 2020-12-31) was used. The data is available on [Kaggle](https://www.kaggle.com/therohk/million-headlines).
 
-### Dictionary-Based Sentiment Anaylsis
+### Dictionary-Based Sentiment Anaylsis: spaCyTextBlob and VADER
 spaCyTextBlob returns for any given sentence a score of polarity (positive, negative) and subjectivity (emotionality). In this project, the score of polarity is used, which ranges between -1 (negative) and 1 (positive). VADER returns the probability of a sentence being positive, negative or neural, and a compound score, which is an aggregated score of all values. For this project, the compound score is used, as it also ranged between -1 (negative) and 1 (positive). For each headline in the data, either the polarity score using spaCyTextBlob or the compound score using VADER is extracted. Subsequently, a daily average is computed, as the data contained multiple headlines per day. These daily averages were then used to calculate rolling averages over one week and one month.
 
 
 ## Repository Structure
 ```
-|-- data/
-    |-- abcnews-date-text.csv
+|-- data/                                  # Directory for data
+    |-- abcnews-date-text.csv              # Input data of news headlines
     
-|-- out/ 
-    |-- vader_sentiment.csv
-    |-- vader_1-week_sentiment.png
-    |-- vader_1-month_sentiment.png
-    |-- textblob_sentiment.csv
-    |-- textblob_1-week_sentiment.png
-    |-- textblob_1-month_sentiment.png
+|-- out/                                   # Directiory for (example) output
+    |-- vader_sentiment.csv                # CSV file of sentiment scores for each headline using VADER
+    |-- vader_1-week_sentiment.png         # Plot of 1-week rollig average sentiment scores using VADER
+    |-- vader_1-month_sentiment.png        # Plot of 1-month rolling average sentiment scores usig VADER
+    |-- textblob_sentiment.csv             # CSV file of sentiment scores for each headline using TextBlob
+    |-- textblob_1-week_sentiment.png      # Plot of 1-week rollig average sentiment scores using TextBlob
+    |-- textblob_1-month_sentiment.png     # Plot of 1-month rolling average sentiment scores usig TextBlob
 
-|-- src/
-    |-- sentiment.py
+|-- src/                                   # Directiory for main scripts
+    |-- sentiment.py                       # Script for sentiment analysis on headlines, usig TextBlob or VADER
     
 |-- README.md
-|-- create_venv.sh
-|-- requirements.txt
-
+|-- create_venv.sh                         # Bash script to re-create virtual environment
+|-- requirements.txt                       # File with necessary dependencies
 ```
 
 ## Usage
