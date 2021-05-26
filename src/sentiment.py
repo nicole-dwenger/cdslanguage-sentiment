@@ -40,7 +40,6 @@ from spacytextblob.spacytextblob import SpacyTextBlob
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-    
 # HELPER FUNCTIONS ---------------------------------------------------
 
 def get_textblob_sentiments(df, text_column):
@@ -121,11 +120,14 @@ def rolling_sentiment_plot(time_window, time_label, df, out_directory, dictionar
     plt.figure()
     # Plot the smoothed data values
     plt.plot(rolling_df["sentiment"], label = f"{time_label} rolling average")
-    # Add title, x label and y label and legend to the plot
+    # Add title
     plt.title(f"Sentiment [{dictionary}] over time with a {time_label} rolling average")
+    # Add x-axis labels
     plt.xlabel("Date")
     plt.xticks(rotation=45)
+    # Add y-axis label
     plt.ylabel(f"Sentiment score")
+    # Add legend
     plt.legend(loc="upper right")
     
     # Save figure as png in output
@@ -141,16 +143,19 @@ def main():
     # Initialise argument parser
     ap = argparse.ArgumentParser()
     
-    # Add input options for file path for input data and 
+    # Add input options for file path 
     ap.add_argument("-i", "--input_file", help = "Path to input file",
                     required = False, default = "../data/abcnews-date-text.csv")
     
+    # Add input option for dictionary to use
     ap.add_argument("-d", "--dictionary", help = "Dictionary: 'textblob' or 'vader'",
                     required = False, default = "textblob")
     
+    # Add input option for start date of news headlines
     ap.add_argument("-s", "--start_date", help = "Start date in yyyy-mm-dd",
                     required = False, default = "2003-02-19")
     
+    # Add input option for end date of news headlines
     ap.add_argument("-e", "--end_date", help = "End date in yyyy-mm-dd",
                     required = False, default = "2020-12-31")
     
@@ -162,7 +167,7 @@ def main():
     end_date = args["end_date"]
     
     # Prepare output directory
-    out_directory = os.path.join("..", "out2")
+    out_directory = os.path.join("..", "out")
     if not os.path.exists(out_directory):
         os.mkdir(out_directory)
     
@@ -197,7 +202,7 @@ def main():
     # Calculate average sentiment score for each day
     df_daily_sentiment = df.resample("1d").mean()
     
-    # Generate and save plots in output directory
+    # Generate and save plots with rolling averages in output directory
     rolling_sentiment_plot("7d", "1-week", df_daily_sentiment, out_directory, dictionary)
     rolling_sentiment_plot("30d", "1-month", df_daily_sentiment, out_directory, dictionary)
     
