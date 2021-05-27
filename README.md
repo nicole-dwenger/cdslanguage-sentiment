@@ -1,4 +1,4 @@
-# Dictionary-Based Sentiment Analysis
+# Dictionary-Based Sentiment Analysis of News Headlines
 
 [Description](#description) | [Methods](#methods) | [Repository Structure](#repository-structure) | [Usage](#usage) | [Results and Disucssion](#results-and-discussion) | [Contact](#contact)
 
